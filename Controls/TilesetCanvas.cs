@@ -17,6 +17,11 @@ public class TilesetCanvas : ScrollableControl
     private bool _isPanning;
     private Point _lastMousePosition;
 
+    private bool _showGrid = true;
+
+    private const int TileSize = 16;
+    private Point _hoverTile = new(-1, -1);
+
     public TilesetCanvas()
     {
         DoubleBuffered = true;
@@ -57,6 +62,13 @@ public class TilesetCanvas : ScrollableControl
                 0,
                 _tileset.Width,
                 _tileset.Height));
+
+        if (_showGrid)
+        {
+            DrawGrid(e.Graphics);
+        }
+
+        DrawHover(e.Graphics);
     }
 
     protected override void OnMouseWheel(MouseEventArgs e)
@@ -134,17 +146,20 @@ public class TilesetCanvas : ScrollableControl
     {
         base.OnMouseMove(e);
 
-        if (!_isPanning)
-            return;
+        if (_isPanning)
+        {
+            int dx = e.X - _lastMousePosition.X;
+            int dy = e.Y - _lastMousePosition.Y;
 
-        int dx = e.X - _lastMousePosition.X;
-        int dy = e.Y - _lastMousePosition.Y;
+            _camera = new PointF(_camera.X + dx, _camera.Y + dy);
+            _lastMousePosition = e.Location;
+        }
 
-        _camera = new PointF(
-            _camera.X + dx,
-            _camera.Y + dy);
+        PointF world = ScreenToWorld(e.Location);
 
-        _lastMousePosition = e.Location;
+        _hoverTile = new Point(
+            (int)Math.Floor(world.X / TileSize),
+            (int)Math.Floor(world.Y / TileSize));
 
         Invalidate();
     }
@@ -158,5 +173,40 @@ public class TilesetCanvas : ScrollableControl
             _isPanning = false;
             Cursor = Cursors.Default;
         }
+    }
+
+    private void DrawGrid(Graphics g)
+    {
+        if (_tileset == null)
+            return;
+
+        using Pen pen = new(Color.FromArgb(90, Color.White), 0);
+
+        // Vertical lines
+        for (int x = 0; x <= _tileset.Width; x += 16)
+        {
+            g.DrawLine(pen, x, 0, x, _tileset.Height);
+        }
+
+        // Horizontal lines
+        for (int y = 0; y <= _tileset.Height; y += 16)
+        {
+            g.DrawLine(pen, 0, y, _tileset.Width, y);
+        }
+    }
+
+    private void DrawHover(Graphics g)
+    {
+        if (_hoverTile.X < 0 || _hoverTile.Y < 0)
+            return;
+
+        using Pen pen = new(Color.Yellow, 0);
+
+        g.DrawRectangle(
+            pen,
+            _hoverTile.X * TileSize,
+            _hoverTile.Y * TileSize,
+            TileSize,
+            TileSize);
     }
 }
