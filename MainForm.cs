@@ -1,18 +1,34 @@
 using PokeAtlas.Controls;
 
-namespace PokeAtlas
+namespace PokeAtlas;
+
+public partial class MainForm : Form
 {
-    public partial class MainForm : Form
+    private readonly TilesetCanvas _tilesetCanvas = new();
+
+    public MainForm()
     {
-        private readonly TilesetCanvas _canvas = new();
+        InitializeComponent();
 
-        public MainForm()
-        {
-            InitializeComponent();
+        InitializeCanvas();
+    }
 
-            _canvas.Dock = DockStyle.Fill;
+    private void InitializeCanvas()
+    {
+        _tilesetCanvas.Dock = DockStyle.Fill;
 
-            splitContainer2.Panel1.Controls.Add(_canvas);
-        }
+        splitContainerInner.Panel1.Controls.Add(_tilesetCanvas);
+    }
+
+    private void openToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        using OpenFileDialog dialog = new();
+
+        dialog.Filter = "PNG Files (*.png)|*.png";
+
+        if (dialog.ShowDialog() != DialogResult.OK)
+            return;
+
+        _tilesetCanvas.LoadTileset(dialog.FileName);
     }
 }
