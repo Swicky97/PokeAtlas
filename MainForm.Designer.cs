@@ -142,7 +142,8 @@
             deleteToolStripButton.Name = "deleteToolStripButton";
             deleteToolStripButton.Size = new Size(44, 22);
             deleteToolStripButton.Text = "Delete";
-            // 
+            deleteToolStripButton.Click += deleteToolStripButton_Click;
+            //
             // toolStripSeparator4
             // 
             toolStripSeparator4.Name = "toolStripSeparator4";
@@ -190,6 +191,7 @@
             treeViewGroups.Name = "treeViewGroups";
             treeViewGroups.Size = new Size(250, 379);
             treeViewGroups.TabIndex = 0;
+            treeViewGroups.AfterSelect += treeViewGroups_AfterSelect;
             // 
             // innerSplitContainer
             // 
@@ -216,7 +218,8 @@
             propertiesGrid.Name = "propertiesGrid";
             propertiesGrid.Size = new Size(242, 379);
             propertiesGrid.TabIndex = 0;
-            // 
+            propertiesGrid.PropertyValueChanged += propertiesGrid_PropertyValueChanged;
+            //
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);

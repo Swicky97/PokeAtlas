@@ -1,4 +1,5 @@
-﻿using System.Drawing.Drawing2D;
+﻿using PokeAtlas.Models;
+using System.Drawing.Drawing2D;
 
 namespace PokeAtlas.Controls;
 
@@ -28,6 +29,10 @@ public class TilesetCanvas : ScrollableControl
     private Point _selectionStartTile = new(-1, -1);
 
     private Point _selectionEndTile = new(-1, -1);
+
+    private TileGroup? _selectedGroup;
+
+    public string? TilesetPath { get; private set; }
 
     public TilesetCanvas()
     {
@@ -61,6 +66,7 @@ public class TilesetCanvas : ScrollableControl
     {
         _tileset?.Dispose();
         _tileset = new Bitmap(filePath);
+        TilesetPath = filePath;
 
         _camera = PointF.Empty;
         _zoom = 1.0f;
@@ -78,21 +84,26 @@ public class TilesetCanvas : ScrollableControl
             return;
 
         e.Graphics.InterpolationMode = InterpolationMode.NearestNeighbor;
-        e.Graphics.PixelOffsetMode = PixelOffsetMode.Half;
+
+        var state = e.Graphics.Save();
 
         e.Graphics.TranslateTransform(_camera.X, _camera.Y);
         e.Graphics.ScaleTransform(_zoom, _zoom);
 
-        e.Graphics.DrawImage(_tileset, Point.Empty);
+        e.Graphics.DrawImage(
+            _tileset,
+            new Rectangle(0, 0, _tileset.Width, _tileset.Height),
+            0, 0, _tileset.Width, _tileset.Height,
+            GraphicsUnit.Pixel);
 
         if (_showGrid)
-        {
             DrawGrid(e.Graphics);
-        }
 
         DrawSelection(e.Graphics);
-
+        DrawSelectedGroup(e.Graphics);
         DrawHover(e.Graphics);
+
+        e.Graphics.Restore(state);
     }
 
     protected override void OnMouseWheel(MouseEventArgs e)
@@ -229,13 +240,13 @@ public class TilesetCanvas : ScrollableControl
         using Pen pen = new(Color.FromArgb(90, Color.White), 0);
 
         // Vertical lines
-        for (int x = 0; x <= _tileset.Width; x += 16)
+        for (int x = 0; x <= _tileset.Width; x += TileSize)
         {
             g.DrawLine(pen, x, 0, x, _tileset.Height);
         }
 
         // Horizontal lines
-        for (int y = 0; y <= _tileset.Height; y += 16)
+        for (int y = 0; y <= _tileset.Height; y += TileSize)
         {
             g.DrawLine(pen, 0, y, _tileset.Width, y);
         }
@@ -287,5 +298,50 @@ public class TilesetCanvas : ScrollableControl
 
         g.FillRectangle(brush, rect);
         g.DrawRectangle(pen, rect);
+    }
+
+    public void SelectGroup(TileGroup? group)
+    {
+        _selectedGroup = group;
+        Invalidate();
+    }
+
+    public void ClearSelection()
+    {
+        _selectionStartTile = new Point(-1, -1);
+        _selectionEndTile = new Point(-1, -1);
+        Invalidate();
+    }
+
+    private void DrawSelectedGroup(Graphics g)
+    {
+        if (_selectedGroup == null)
+            return;
+
+        Rectangle r = _selectedGroup.TileBounds;
+
+        Rectangle pixels = new(
+            r.X * TileSize,
+            r.Y * TileSize,
+            r.Width * TileSize,
+            r.Height * TileSize);
+
+        using Pen pen = new(Color.Lime, 0);
+
+        g.DrawRectangle(pen, pixels);
+    }
+
+    public void CenterOnGroup(TileGroup group)
+    {
+        Rectangle r = group.TileBounds;
+
+        float centerX = (r.Left + r.Width / 2f) * TileSize;
+        float centerY = (r.Top + r.Height / 2f) * TileSize;
+
+        _camera = new PointF(
+            ClientSize.Width / 2f - centerX * _zoom,
+            ClientSize.Height / 2f - centerY * _zoom);
+
+        Invalidate();
     }
 }

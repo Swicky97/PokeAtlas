@@ -66,12 +66,56 @@ public partial class MainForm : Form
         {
             Name = dialog.GroupName,
             Category = dialog.Category,
-            TileBounds = selection.Value
+            TileBounds = selection.Value,
+            SourceAtlas = _tilesetCanvas.TilesetPath is { } path ? Path.GetFileName(path) : string.Empty
         };
 
         _groupService.Add(group);
 
+        _tilesetCanvas.ClearSelection();
+
         RefreshTreeView();
+        SelectNodeForGroup(group);
+    }
+
+    private void deleteToolStripButton_Click(object sender, EventArgs e)
+    {
+        if (treeViewGroups.SelectedNode?.Tag is not TileGroup group)
+        {
+            MessageBox.Show("Please select a group to delete.");
+            return;
+        }
+
+        _groupService.Remove(group);
+
+        propertiesGrid.SelectedObject = null;
+        _tilesetCanvas.SelectGroup(null);
+
+        RefreshTreeView();
+    }
+
+    private void propertiesGrid_PropertyValueChanged(object sender, PropertyValueChangedEventArgs e)
+    {
+        if (propertiesGrid.SelectedObject is not TileGroup group)
+            return;
+
+        RefreshTreeView();
+        SelectNodeForGroup(group);
+    }
+
+    private void SelectNodeForGroup(TileGroup group)
+    {
+        foreach (TreeNode categoryNode in treeViewGroups.Nodes)
+        {
+            foreach (TreeNode node in categoryNode.Nodes)
+            {
+                if (node.Tag == group)
+                {
+                    treeViewGroups.SelectedNode = node;
+                    return;
+                }
+            }
+        }
     }
 
     private void RefreshTreeView()
@@ -100,5 +144,19 @@ public partial class MainForm : Form
         treeViewGroups.ExpandAll();
 
         treeViewGroups.EndUpdate();
+    }
+
+    private void treeViewGroups_AfterSelect(object sender, TreeViewEventArgs e)
+    {
+        if (e.Node?.Tag is not TileGroup group)
+        {
+            propertiesGrid.SelectedObject = null;
+            return;
+        }
+
+        propertiesGrid.SelectedObject = group;
+
+        _tilesetCanvas.SelectGroup(group);
+        _tilesetCanvas.CenterOnGroup(group);
     }
 }
