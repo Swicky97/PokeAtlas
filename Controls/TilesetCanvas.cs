@@ -22,6 +22,13 @@ public class TilesetCanvas : ScrollableControl
     private const int TileSize = 16;
     private Point _hoverTile = new(-1, -1);
 
+    // Selection
+    private bool _isSelecting;
+
+    private Point _selectionStartTile = new(-1, -1);
+
+    private Point _selectionEndTile = new(-1, -1);
+
     public TilesetCanvas()
     {
         DoubleBuffered = true;
@@ -55,18 +62,14 @@ public class TilesetCanvas : ScrollableControl
         e.Graphics.TranslateTransform(_camera.X, _camera.Y);
         e.Graphics.ScaleTransform(_zoom, _zoom);
 
-        e.Graphics.DrawImage(
-            _tileset,
-            new Rectangle(
-                0,
-                0,
-                _tileset.Width,
-                _tileset.Height));
+        e.Graphics.DrawImage(_tileset, Point.Empty);
 
         if (_showGrid)
         {
             DrawGrid(e.Graphics);
         }
+
+        DrawSelection(e.Graphics);
 
         DrawHover(e.Graphics);
     }
@@ -138,7 +141,18 @@ public class TilesetCanvas : ScrollableControl
         {
             _isPanning = true;
             _lastMousePosition = e.Location;
+
             Cursor = Cursors.SizeAll;
+        }
+
+        if (e.Button == MouseButtons.Left)
+        {
+            _isSelecting = true;
+
+            _selectionStartTile = GetTileAt(e.Location);
+            _selectionEndTile = _selectionStartTile;
+
+            Invalidate();
         }
     }
 
@@ -151,15 +165,19 @@ public class TilesetCanvas : ScrollableControl
             int dx = e.X - _lastMousePosition.X;
             int dy = e.Y - _lastMousePosition.Y;
 
-            _camera = new PointF(_camera.X + dx, _camera.Y + dy);
+            _camera = new PointF(
+                _camera.X + dx,
+                _camera.Y + dy);
+
             _lastMousePosition = e.Location;
         }
 
-        PointF world = ScreenToWorld(e.Location);
+        _hoverTile = GetTileAt(e.Location);
 
-        _hoverTile = new Point(
-            (int)Math.Floor(world.X / TileSize),
-            (int)Math.Floor(world.Y / TileSize));
+        if (_isSelecting)
+        {
+            _selectionEndTile = _hoverTile;
+        }
 
         Invalidate();
     }
@@ -172,6 +190,13 @@ public class TilesetCanvas : ScrollableControl
         {
             _isPanning = false;
             Cursor = Cursors.Default;
+        }
+
+        if (e.Button == MouseButtons.Left)
+        {
+            _isSelecting = false;
+
+            Invalidate();
         }
     }
 
@@ -197,7 +222,7 @@ public class TilesetCanvas : ScrollableControl
 
     private void DrawHover(Graphics g)
     {
-        if (_hoverTile.X < 0 || _hoverTile.Y < 0)
+        if (_hoverTile.X < 0)
             return;
 
         using Pen pen = new(Color.Yellow, 0);
@@ -208,5 +233,38 @@ public class TilesetCanvas : ScrollableControl
             _hoverTile.Y * TileSize,
             TileSize,
             TileSize);
+    }
+
+    private Point GetTileAt(Point screenPoint)
+    {
+        PointF world = ScreenToWorld(screenPoint);
+
+        return new Point(
+            (int)Math.Floor(world.X / TileSize),
+            (int)Math.Floor(world.Y / TileSize));
+    }
+
+    private void DrawSelection(Graphics g)
+    {
+        if (_selectionStartTile.X < 0)
+            return;
+
+        int left = Math.Min(_selectionStartTile.X, _selectionEndTile.X);
+        int top = Math.Min(_selectionStartTile.Y, _selectionEndTile.Y);
+
+        int right = Math.Max(_selectionStartTile.X, _selectionEndTile.X);
+        int bottom = Math.Max(_selectionStartTile.Y, _selectionEndTile.Y);
+
+        Rectangle rect = new(
+            left * TileSize,
+            top * TileSize,
+            (right - left + 1) * TileSize,
+            (bottom - top + 1) * TileSize);
+
+        using SolidBrush brush = new(Color.FromArgb(70, Color.DeepSkyBlue));
+        using Pen pen = new(Color.DeepSkyBlue, 0);
+
+        g.FillRectangle(brush, rect);
+        g.DrawRectangle(pen, rect);
     }
 }
