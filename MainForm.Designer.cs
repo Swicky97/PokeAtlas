@@ -44,6 +44,8 @@
             gridToolStripButton = new ToolStripButton();
             toolStripSeparator6 = new ToolStripSeparator();
             buildToolStripButton = new ToolStripButton();
+            toolStripSeparator7 = new ToolStripSeparator();
+            duplicatesToolStripButton = new ToolStripButton();
             toolStripSeparator5 = new ToolStripSeparator();
             searchToolStripLabel = new ToolStripLabel();
             searchToolStripTextBox = new ToolStripTextBox();
@@ -88,7 +90,7 @@
             // 
             // mainToolStrip
             // 
-            mainToolStrip.Items.AddRange(new ToolStripItem[] { openToolStripButton, toolStripSeparator1, saveToolStripButton, toolStripSeparator2, addGroupToolStripButton, toolStripSeparator3, deleteToolStripButton, toolStripSeparator4, gridToolStripButton, toolStripSeparator6, buildToolStripButton, toolStripSeparator5, searchToolStripLabel, searchToolStripTextBox });
+            mainToolStrip.Items.AddRange(new ToolStripItem[] { openToolStripButton, toolStripSeparator1, saveToolStripButton, toolStripSeparator2, addGroupToolStripButton, toolStripSeparator3, deleteToolStripButton, toolStripSeparator4, gridToolStripButton, toolStripSeparator6, buildToolStripButton, toolStripSeparator7, duplicatesToolStripButton, toolStripSeparator5, searchToolStripLabel, searchToolStripTextBox });
             mainToolStrip.Location = new Point(0, 24);
             mainToolStrip.Name = "mainToolStrip";
             mainToolStrip.Size = new Size(800, 25);
@@ -176,6 +178,19 @@
             buildToolStripButton.Size = new Size(40, 22);
             buildToolStripButton.Text = "Build";
             buildToolStripButton.Click += buildToolStripButton_Click;
+            //
+            // toolStripSeparator7
+            //
+            toolStripSeparator7.Name = "toolStripSeparator7";
+            toolStripSeparator7.Size = new Size(6, 25);
+            //
+            // duplicatesToolStripButton
+            //
+            duplicatesToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            duplicatesToolStripButton.Name = "duplicatesToolStripButton";
+            duplicatesToolStripButton.Size = new Size(75, 22);
+            duplicatesToolStripButton.Text = "Duplicates";
+            duplicatesToolStripButton.Click += duplicatesToolStripButton_Click;
             //
             // toolStripSeparator5
             //
@@ -307,6 +322,8 @@
         private ToolStripButton gridToolStripButton;
         private ToolStripSeparator toolStripSeparator6;
         private ToolStripButton buildToolStripButton;
+        private ToolStripSeparator toolStripSeparator7;
+        private ToolStripButton duplicatesToolStripButton;
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripLabel searchToolStripLabel;
         private ToolStripTextBox searchToolStripTextBox;

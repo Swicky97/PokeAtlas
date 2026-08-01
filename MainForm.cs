@@ -14,6 +14,10 @@ public partial class MainForm : Form
 
     private readonly AtlasBuilderService _atlasBuilderService = new();
 
+    private readonly DuplicateDetectionService _duplicateDetectionService = new();
+
+    private DuplicatesForm? _duplicatesForm;
+
     public MainForm()
     {
         InitializeComponent();
@@ -119,6 +123,37 @@ public partial class MainForm : Form
         }
 
         result.Atlas.Dispose();
+    }
+
+    private void duplicatesToolStripButton_Click(object sender, EventArgs e)
+    {
+        if (_tilesetCanvas.Tileset is not { } tileset)
+        {
+            MessageBox.Show("Please open a tileset first.");
+            return;
+        }
+
+        if (_duplicatesForm is { IsDisposed: false })
+        {
+            _duplicatesForm.Activate();
+            return;
+        }
+
+        Cursor = Cursors.WaitCursor;
+        List<DuplicateTileGroup> duplicates;
+
+        try
+        {
+            duplicates = _duplicateDetectionService.FindDuplicates(tileset, TilesetCanvas.TileSize);
+        }
+        finally
+        {
+            Cursor = Cursors.Default;
+        }
+
+        _duplicatesForm = new DuplicatesForm(tileset, duplicates, TilesetCanvas.TileSize);
+        _duplicatesForm.TileSelected += bounds => _tilesetCanvas.CenterOnBounds(bounds);
+        _duplicatesForm.Show(this);
     }
 
     private void openToolStripMenuItem_Click(object sender, EventArgs e)

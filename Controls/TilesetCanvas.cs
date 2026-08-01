@@ -335,10 +335,13 @@ public class TilesetCanvas : ScrollableControl
 
     public void CenterOnGroup(TileGroup group)
     {
-        Rectangle r = group.TileBounds;
+        CenterOnBounds(group.TileBounds);
+    }
 
-        float centerX = (r.Left + r.Width / 2f) * TileSize;
-        float centerY = (r.Top + r.Height / 2f) * TileSize;
+    public void CenterOnBounds(Rectangle tileBounds)
+    {
+        float centerX = (tileBounds.Left + tileBounds.Width / 2f) * TileSize;
+        float centerY = (tileBounds.Top + tileBounds.Height / 2f) * TileSize;
 
         _camera = new PointF(
             ClientSize.Width / 2f - centerX * _zoom,
