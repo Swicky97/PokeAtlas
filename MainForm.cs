@@ -12,6 +12,8 @@ public partial class MainForm : Form
 
     private readonly MetadataService _metadataService = new();
 
+    private readonly AtlasBuilderService _atlasBuilderService = new();
+
     public MainForm()
     {
         InitializeComponent();
@@ -93,6 +95,26 @@ public partial class MainForm : Form
         {
             MessageBox.Show($"Failed to save metadata.json:\n{ex.Message}", "Save Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
+    }
+
+    private void buildToolStripButton_Click(object sender, EventArgs e)
+    {
+        if (_tilesetCanvas.Tileset is not { } tileset)
+        {
+            MessageBox.Show("Please open a tileset first.");
+            return;
+        }
+
+        if (_groupService.Groups.Count == 0)
+        {
+            MessageBox.Show("Please add at least one group first.");
+            return;
+        }
+
+        using Bitmap masterAtlas = _atlasBuilderService.Build(tileset, _groupService.Groups, TilesetCanvas.TileSize);
+        using AtlasPreviewForm preview = new(masterAtlas);
+
+        preview.ShowDialog(this);
     }
 
     private void openToolStripMenuItem_Click(object sender, EventArgs e)

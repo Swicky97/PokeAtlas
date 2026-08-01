@@ -20,7 +20,7 @@ public class TilesetCanvas : ScrollableControl
 
     private bool _showGrid = true;
 
-    private const int TileSize = 16;
+    public const int TileSize = 16;
     private Point _hoverTile = new(-1, -1);
 
     // Selection
@@ -33,6 +33,8 @@ public class TilesetCanvas : ScrollableControl
     private TileGroup? _selectedGroup;
 
     public string? TilesetPath { get; private set; }
+
+    public Bitmap? Tileset => _tileset;
 
     public TilesetCanvas()
     {
