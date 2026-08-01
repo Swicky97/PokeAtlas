@@ -16,8 +16,9 @@ public partial class AtlasPreviewForm : Form
         _result = result;
         _tileSize = tileSize;
 
-        pictureBoxAtlas.Image = result.Atlas;
-        pictureBoxAtlas.Size = result.Atlas.Size;
+        AtlasPreviewCanvas canvas = new(result.Atlas, result.Placements, tileSize);
+
+        panelScroll.Controls.Add(canvas);
     }
 
     private void btnExport_Click(object sender, EventArgs e)

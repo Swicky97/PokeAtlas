@@ -5,79 +5,57 @@ namespace PokeAtlas.Services;
 
 public class AtlasBuilderService
 {
-    private const int MaxRowWidth = 512;
+    // 512px at a 16px tile size; grows automatically if a single group is wider than this.
+    private const int MinAtlasWidthTiles = 32;
+
+    // Every group reserves one blank tile row above it for the category header the preview draws.
+    private const int HeaderTiles = 1;
 
     public AtlasBuildResult Build(Bitmap sourceTileset, IEnumerable<TileGroup> groups, int tileSize)
     {
-        int padding = tileSize;
-        int categoryHeaderHeight = tileSize;
+        List<TileGroup> ordered = groups
+            .OrderByDescending(g => g.TileBounds.Height)
+            .ThenByDescending(g => g.TileBounds.Width)
+            .ToList();
 
-        var rawPlacements = new List<(TileGroup Group, Rectangle SourcePixels, Point Destination)>();
+        int atlasWidthTiles = ordered.Count == 0
+            ? MinAtlasWidthTiles
+            : Math.Max(MinAtlasWidthTiles, ordered.Max(g => g.TileBounds.Width));
 
-        int y = 0;
-        int atlasWidth = 0;
+        SkylinePacker packer = new(atlasWidthTiles);
 
-        foreach (var category in groups.GroupBy(g => g.Category).OrderBy(c => c.Key))
+        var rawPlacements = new List<(TileGroup Group, Rectangle SourcePixels, Point ArtTile)>();
+
+        foreach (TileGroup group in ordered)
         {
-            y += categoryHeaderHeight;
+            Point slotTile = packer.Place(group.TileBounds.Width, group.TileBounds.Height + HeaderTiles);
+            Point artTile = new(slotTile.X, slotTile.Y + HeaderTiles);
 
-            int x = 0;
-            int rowHeight = 0;
+            Rectangle sourcePixels = new(
+                group.TileBounds.X * tileSize,
+                group.TileBounds.Y * tileSize,
+                group.TileBounds.Width * tileSize,
+                group.TileBounds.Height * tileSize);
 
-            foreach (TileGroup group in category)
-            {
-                int pixelWidth = group.TileBounds.Width * tileSize;
-                int pixelHeight = group.TileBounds.Height * tileSize;
-
-                if (x > 0 && x + pixelWidth > MaxRowWidth)
-                {
-                    x = 0;
-                    y += rowHeight + padding;
-                    rowHeight = 0;
-                }
-
-                Rectangle sourcePixels = new(
-                    group.TileBounds.X * tileSize,
-                    group.TileBounds.Y * tileSize,
-                    pixelWidth,
-                    pixelHeight);
-
-                rawPlacements.Add((group, sourcePixels, new Point(x, y)));
-
-                atlasWidth = Math.Max(atlasWidth, x + pixelWidth);
-                rowHeight = Math.Max(rowHeight, pixelHeight);
-
-                x += pixelWidth + padding;
-            }
-
-            y += rowHeight + padding;
+            rawPlacements.Add((group, sourcePixels, artTile));
         }
 
-        Bitmap atlas = new(Math.Max(atlasWidth, tileSize), Math.Max(y, tileSize));
+        Bitmap atlas = new(atlasWidthTiles * tileSize, Math.Max(packer.UsedHeight, 1) * tileSize);
 
         using (Graphics g = Graphics.FromImage(atlas))
         {
             g.Clear(Color.FromArgb(45, 45, 48));
             g.InterpolationMode = InterpolationMode.NearestNeighbor;
 
-            using Font font = new("Segoe UI", 8f);
-            using Brush textBrush = new SolidBrush(Color.White);
-
-            string? currentCategory = null;
-
-            foreach (var (group, sourcePixels, destination) in rawPlacements)
+            foreach (var (group, sourcePixels, artTile) in rawPlacements)
             {
-                if (group.Category != currentCategory)
-                {
-                    currentCategory = group.Category;
-                    g.DrawString(currentCategory, font, textBrush, new PointF(0, destination.Y - categoryHeaderHeight));
-                }
+                Rectangle destinationPixels = new(
+                    artTile.X * tileSize,
+                    artTile.Y * tileSize,
+                    sourcePixels.Width,
+                    sourcePixels.Height);
 
-                g.DrawImage(
-                    sourceTileset,
-                    new Rectangle(destination, sourcePixels.Size),
-                    sourcePixels,
-                    GraphicsUnit.Pixel);
+                g.DrawImage(sourceTileset, destinationPixels, sourcePixels, GraphicsUnit.Pixel);
             }
         }
 
@@ -86,8 +64,8 @@ public class AtlasBuilderService
             {
                 Group = p.Group,
                 TileBounds = new Rectangle(
-                    p.Destination.X / tileSize,
-                    p.Destination.Y / tileSize,
+                    p.ArtTile.X,
+                    p.ArtTile.Y,
                     p.Group.TileBounds.Width,
                     p.Group.TileBounds.Height)
             })

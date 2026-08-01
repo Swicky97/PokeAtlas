@@ -17,9 +17,6 @@ namespace PokeAtlas.Controls
         {
             btnExport = new Button();
             panelScroll = new Panel();
-            pictureBoxAtlas = new PictureBox();
-            panelScroll.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxAtlas).BeginInit();
             SuspendLayout();
             //
             // btnExport
@@ -35,17 +32,8 @@ namespace PokeAtlas.Controls
             //
             panelScroll.AutoScroll = true;
             panelScroll.BackColor = Color.FromArgb(30, 30, 30);
-            panelScroll.Controls.Add(pictureBoxAtlas);
             panelScroll.Dock = DockStyle.Fill;
             panelScroll.Name = "panelScroll";
-            //
-            // pictureBoxAtlas
-            //
-            pictureBoxAtlas.Location = new Point(0, 0);
-            pictureBoxAtlas.Name = "pictureBoxAtlas";
-            pictureBoxAtlas.SizeMode = PictureBoxSizeMode.AutoSize;
-            pictureBoxAtlas.TabIndex = 0;
-            pictureBoxAtlas.TabStop = false;
             //
             // AtlasPreviewForm
             //
@@ -57,14 +45,10 @@ namespace PokeAtlas.Controls
             Name = "AtlasPreviewForm";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Atlas Preview";
-            panelScroll.ResumeLayout(false);
-            panelScroll.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)pictureBoxAtlas).EndInit();
             ResumeLayout(false);
         }
 
         private Button btnExport;
         private Panel panelScroll;
-        private PictureBox pictureBoxAtlas;
     }
 }
