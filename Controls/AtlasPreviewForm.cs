@@ -8,6 +8,9 @@ public partial class AtlasPreviewForm : Form
     private readonly AtlasBuildResult _result;
     private readonly int _tileSize;
     private readonly AtlasExportService _exportService = new();
+    private readonly AtlasPreviewCanvas _canvas;
+
+    public event Action<TileGroup>? GroupSelected;
 
     public AtlasPreviewForm(AtlasBuildResult result, int tileSize)
     {
@@ -16,9 +19,25 @@ public partial class AtlasPreviewForm : Form
         _result = result;
         _tileSize = tileSize;
 
-        AtlasPreviewCanvas canvas = new(result.Atlas, result.Placements, tileSize);
+        _canvas = new AtlasPreviewCanvas(result.Atlas, result.Placements, tileSize);
+        _canvas.GroupClicked += group => GroupSelected?.Invoke(group);
 
-        panelScroll.Controls.Add(canvas);
+        panelScroll.Controls.Add(_canvas);
+
+        FormClosed += (_, _) => _result.Atlas.Dispose();
+    }
+
+    public void HighlightGroup(TileGroup group)
+    {
+        _canvas.SelectGroup(group);
+
+        if (_canvas.GetGroupPixelBounds(group) is not { } bounds)
+            return;
+
+        int targetX = Math.Max(0, bounds.X + bounds.Width / 2 - panelScroll.ClientSize.Width / 2);
+        int targetY = Math.Max(0, bounds.Y + bounds.Height / 2 - panelScroll.ClientSize.Height / 2);
+
+        panelScroll.AutoScrollPosition = new Point(targetX, targetY);
     }
 
     private void btnExport_Click(object sender, EventArgs e)

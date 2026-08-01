@@ -9,6 +9,10 @@ internal class AtlasPreviewCanvas : Control
     private readonly IReadOnlyList<AtlasPlacement> _placements;
     private readonly int _tileSize;
 
+    private TileGroup? _selectedGroup;
+
+    public event Action<TileGroup>? GroupClicked;
+
     public AtlasPreviewCanvas(Bitmap atlas, IReadOnlyList<AtlasPlacement> placements, int tileSize)
     {
         _atlas = atlas;
@@ -17,6 +21,38 @@ internal class AtlasPreviewCanvas : Control
 
         DoubleBuffered = true;
         Size = atlas.Size;
+    }
+
+    public void SelectGroup(TileGroup? group)
+    {
+        _selectedGroup = group;
+        Invalidate();
+    }
+
+    public Rectangle? GetGroupPixelBounds(TileGroup group)
+    {
+        AtlasPlacement? placement = _placements.FirstOrDefault(p => p.Group == group);
+
+        if (placement is null)
+            return null;
+
+        return new Rectangle(
+            placement.TileBounds.X * _tileSize,
+            (placement.TileBounds.Y - 1) * _tileSize,
+            placement.TileBounds.Width * _tileSize,
+            (placement.TileBounds.Height + 1) * _tileSize);
+    }
+
+    protected override void OnMouseDown(MouseEventArgs e)
+    {
+        base.OnMouseDown(e);
+
+        Point tile = new(e.X / _tileSize, e.Y / _tileSize);
+
+        AtlasPlacement? hit = _placements.FirstOrDefault(p => p.TileBounds.Contains(tile));
+
+        if (hit is not null)
+            GroupClicked?.Invoke(hit.Group);
     }
 
     protected override void OnPaint(PaintEventArgs e)
@@ -48,6 +84,18 @@ internal class AtlasPreviewCanvas : Control
             e.Graphics.DrawString(placement.Group.Category, headerFont, headerTextBrush, headerPixels.Location);
 
             e.Graphics.Restore(state);
+        }
+
+        if (_selectedGroup is not null && GetGroupPixelBounds(_selectedGroup) is { } selectedBounds)
+        {
+            using Pen selectionPen = new(Color.Lime, 2);
+
+            e.Graphics.DrawRectangle(
+                selectionPen,
+                selectedBounds.X + 1,
+                selectedBounds.Y + 1,
+                selectedBounds.Width - 2,
+                selectedBounds.Height - 2);
         }
     }
 }

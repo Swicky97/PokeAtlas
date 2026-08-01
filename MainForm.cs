@@ -18,6 +18,8 @@ public partial class MainForm : Form
 
     private DuplicatesForm? _duplicatesForm;
 
+    private AtlasPreviewForm? _atlasPreviewForm;
+
     public MainForm()
     {
         InitializeComponent();
@@ -115,14 +117,15 @@ public partial class MainForm : Form
             return;
         }
 
+        _atlasPreviewForm?.Close();
+
         AtlasBuildResult result = _atlasBuilderService.Build(tileset, _groupService.Groups, TilesetCanvas.TileSize);
 
-        using (AtlasPreviewForm preview = new(result, TilesetCanvas.TileSize))
-        {
-            preview.ShowDialog(this);
-        }
+        _atlasPreviewForm = new AtlasPreviewForm(result, TilesetCanvas.TileSize);
+        _atlasPreviewForm.FormClosed += (_, _) => _atlasPreviewForm = null;
+        _atlasPreviewForm.GroupSelected += group => SelectNodeForGroup(group);
 
-        result.Atlas.Dispose();
+        _atlasPreviewForm.Show(this);
     }
 
     private void duplicatesToolStripButton_Click(object sender, EventArgs e)
@@ -296,5 +299,7 @@ public partial class MainForm : Form
 
         _tilesetCanvas.SelectGroup(group);
         _tilesetCanvas.CenterOnGroup(group);
+
+        _atlasPreviewForm?.HighlightGroup(group);
     }
 }
