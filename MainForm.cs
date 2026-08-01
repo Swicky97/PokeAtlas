@@ -111,10 +111,14 @@ public partial class MainForm : Form
             return;
         }
 
-        using Bitmap masterAtlas = _atlasBuilderService.Build(tileset, _groupService.Groups, TilesetCanvas.TileSize);
-        using AtlasPreviewForm preview = new(masterAtlas);
+        AtlasBuildResult result = _atlasBuilderService.Build(tileset, _groupService.Groups, TilesetCanvas.TileSize);
 
-        preview.ShowDialog(this);
+        using (AtlasPreviewForm preview = new(result, TilesetCanvas.TileSize))
+        {
+            preview.ShowDialog(this);
+        }
+
+        result.Atlas.Dispose();
     }
 
     private void openToolStripMenuItem_Click(object sender, EventArgs e)

@@ -15,11 +15,21 @@ namespace PokeAtlas.Controls
 
         private void InitializeComponent()
         {
+            btnExport = new Button();
             panelScroll = new Panel();
             pictureBoxAtlas = new PictureBox();
             panelScroll.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)pictureBoxAtlas).BeginInit();
             SuspendLayout();
+            //
+            // btnExport
+            //
+            btnExport.Dock = DockStyle.Top;
+            btnExport.Height = 32;
+            btnExport.Name = "btnExport";
+            btnExport.Text = "Export...";
+            btnExport.UseVisualStyleBackColor = true;
+            btnExport.Click += btnExport_Click;
             //
             // panelScroll
             //
@@ -43,6 +53,7 @@ namespace PokeAtlas.Controls
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(700, 500);
             Controls.Add(panelScroll);
+            Controls.Add(btnExport);
             Name = "AtlasPreviewForm";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Atlas Preview";
@@ -52,6 +63,7 @@ namespace PokeAtlas.Controls
             ResumeLayout(false);
         }
 
+        private Button btnExport;
         private Panel panelScroll;
         private PictureBox pictureBoxAtlas;
     }
