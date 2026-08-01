@@ -28,16 +28,27 @@
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
             menuStrip1 = new MenuStrip();
+            fileToolStripMenuItem = new ToolStripMenuItem();
+            openToolStripMenuItem = new ToolStripMenuItem();
             toolStrip1 = new ToolStrip();
+            openToolStripButton = new ToolStripButton();
+            toolStripSeparator1 = new ToolStripSeparator();
+            saveToolStripButton = new ToolStripButton();
+            toolStripSeparator2 = new ToolStripSeparator();
+            addGroupToolStripButton = new ToolStripButton();
+            toolStripSeparator3 = new ToolStripSeparator();
+            deleteToolStripButton = new ToolStripButton();
+            toolStripSeparator4 = new ToolStripSeparator();
+            gridToolStripButton = new ToolStripButton();
             statusStrip1 = new StatusStrip();
             splitContainerOuter = new SplitContainer();
             treeView1 = new TreeView();
             splitContainerInner = new SplitContainer();
             propertyGrid1 = new PropertyGrid();
-            fileToolStripMenuItem = new ToolStripMenuItem();
-            openToolStripMenuItem = new ToolStripMenuItem();
             menuStrip1.SuspendLayout();
+            toolStrip1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainerOuter).BeginInit();
             splitContainerOuter.Panel1.SuspendLayout();
             splitContainerOuter.Panel2.SuspendLayout();
@@ -56,13 +67,95 @@
             menuStrip1.TabIndex = 0;
             menuStrip1.Text = "menuStrip1";
             // 
+            // fileToolStripMenuItem
+            // 
+            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openToolStripMenuItem });
+            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
+            fileToolStripMenuItem.Size = new Size(37, 20);
+            fileToolStripMenuItem.Text = "File";
+            // 
+            // openToolStripMenuItem
+            // 
+            openToolStripMenuItem.Name = "openToolStripMenuItem";
+            openToolStripMenuItem.Size = new Size(112, 22);
+            openToolStripMenuItem.Text = "Open...";
+            openToolStripMenuItem.Click += openToolStripMenuItem_Click;
+            // 
             // toolStrip1
             // 
+            toolStrip1.Items.AddRange(new ToolStripItem[] { openToolStripButton, toolStripSeparator1, saveToolStripButton, toolStripSeparator2, addGroupToolStripButton, toolStripSeparator3, deleteToolStripButton, toolStripSeparator4, gridToolStripButton });
             toolStrip1.Location = new Point(0, 24);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Size = new Size(800, 25);
             toolStrip1.TabIndex = 1;
             toolStrip1.Text = "toolStrip1";
+            // 
+            // openToolStripButton
+            // 
+            openToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            openToolStripButton.Image = (Image)resources.GetObject("openToolStripButton.Image");
+            openToolStripButton.ImageTransparentColor = Color.Magenta;
+            openToolStripButton.Name = "openToolStripButton";
+            openToolStripButton.Size = new Size(40, 22);
+            openToolStripButton.Text = "Open";
+            openToolStripButton.Click += openToolStripButton_Click;
+            // 
+            // toolStripSeparator1
+            // 
+            toolStripSeparator1.Name = "toolStripSeparator1";
+            toolStripSeparator1.Size = new Size(6, 25);
+            // 
+            // saveToolStripButton
+            // 
+            saveToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            saveToolStripButton.Image = (Image)resources.GetObject("saveToolStripButton.Image");
+            saveToolStripButton.ImageTransparentColor = Color.Magenta;
+            saveToolStripButton.Name = "saveToolStripButton";
+            saveToolStripButton.Size = new Size(35, 22);
+            saveToolStripButton.Text = "Save";
+            // 
+            // toolStripSeparator2
+            // 
+            toolStripSeparator2.Name = "toolStripSeparator2";
+            toolStripSeparator2.Size = new Size(6, 25);
+            // 
+            // addGroupToolStripButton
+            // 
+            addGroupToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            addGroupToolStripButton.Image = (Image)resources.GetObject("addGroupToolStripButton.Image");
+            addGroupToolStripButton.ImageTransparentColor = Color.Magenta;
+            addGroupToolStripButton.Name = "addGroupToolStripButton";
+            addGroupToolStripButton.Size = new Size(69, 22);
+            addGroupToolStripButton.Text = "Add Group";
+            addGroupToolStripButton.Click += addGroupToolStripButton_Click;
+            // 
+            // toolStripSeparator3
+            // 
+            toolStripSeparator3.Name = "toolStripSeparator3";
+            toolStripSeparator3.Size = new Size(6, 25);
+            // 
+            // deleteToolStripButton
+            // 
+            deleteToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            deleteToolStripButton.Image = (Image)resources.GetObject("deleteToolStripButton.Image");
+            deleteToolStripButton.ImageTransparentColor = Color.Magenta;
+            deleteToolStripButton.Name = "deleteToolStripButton";
+            deleteToolStripButton.Size = new Size(44, 22);
+            deleteToolStripButton.Text = "Delete";
+            // 
+            // toolStripSeparator4
+            // 
+            toolStripSeparator4.Name = "toolStripSeparator4";
+            toolStripSeparator4.Size = new Size(6, 25);
+            // 
+            // gridToolStripButton
+            // 
+            gridToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            gridToolStripButton.Image = (Image)resources.GetObject("gridToolStripButton.Image");
+            gridToolStripButton.ImageTransparentColor = Color.Magenta;
+            gridToolStripButton.Name = "gridToolStripButton";
+            gridToolStripButton.Size = new Size(33, 22);
+            gridToolStripButton.Text = "Grid";
             // 
             // statusStrip1
             // 
@@ -124,20 +217,6 @@
             propertyGrid1.Size = new Size(242, 379);
             propertyGrid1.TabIndex = 0;
             // 
-            // fileToolStripMenuItem
-            // 
-            fileToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { openToolStripMenuItem });
-            fileToolStripMenuItem.Name = "fileToolStripMenuItem";
-            fileToolStripMenuItem.Size = new Size(37, 20);
-            fileToolStripMenuItem.Text = "File";
-            // 
-            // openToolStripMenuItem
-            // 
-            openToolStripMenuItem.Name = "openToolStripMenuItem";
-            openToolStripMenuItem.Size = new Size(180, 22);
-            openToolStripMenuItem.Text = "Open...";
-            openToolStripMenuItem.Click += openToolStripMenuItem_Click;
-            // 
             // MainForm
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -152,6 +231,8 @@
             Text = "Form1";
             menuStrip1.ResumeLayout(false);
             menuStrip1.PerformLayout();
+            toolStrip1.ResumeLayout(false);
+            toolStrip1.PerformLayout();
             splitContainerOuter.Panel1.ResumeLayout(false);
             splitContainerOuter.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainerOuter).EndInit();
@@ -174,5 +255,14 @@
         private PropertyGrid propertyGrid1;
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem openToolStripMenuItem;
+        private ToolStripButton openToolStripButton;
+        private ToolStripSeparator toolStripSeparator1;
+        private ToolStripButton saveToolStripButton;
+        private ToolStripSeparator toolStripSeparator2;
+        private ToolStripButton addGroupToolStripButton;
+        private ToolStripSeparator toolStripSeparator3;
+        private ToolStripButton deleteToolStripButton;
+        private ToolStripSeparator toolStripSeparator4;
+        private ToolStripButton gridToolStripButton;
     }
 }

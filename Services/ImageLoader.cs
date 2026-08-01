@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AtlasDex.Services;
+namespace PokeAtlas.Services;
 
 public class ImageLoader
 {

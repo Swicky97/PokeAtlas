@@ -36,6 +36,27 @@ public class TilesetCanvas : ScrollableControl
         BackColor = Color.FromArgb(45, 45, 48);
     }
 
+    public Rectangle? SelectedTileRectangle
+    {
+        get
+        {
+            if (_selectionStartTile.X < 0)
+                return null;
+
+            int left = Math.Min(_selectionStartTile.X, _selectionEndTile.X);
+            int top = Math.Min(_selectionStartTile.Y, _selectionEndTile.Y);
+
+            int right = Math.Max(_selectionStartTile.X, _selectionEndTile.X);
+            int bottom = Math.Max(_selectionStartTile.Y, _selectionEndTile.Y);
+
+            return new Rectangle(
+                left,
+                top,
+                right - left + 1,
+                bottom - top + 1);
+        }
+    }
+
     public void LoadTileset(string filePath)
     {
         _tileset?.Dispose();
