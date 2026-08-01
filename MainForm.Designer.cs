@@ -29,10 +29,10 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainForm));
-            menuStrip1 = new MenuStrip();
+            mainMenuStrip = new MenuStrip();
             fileToolStripMenuItem = new ToolStripMenuItem();
             openToolStripMenuItem = new ToolStripMenuItem();
-            toolStrip1 = new ToolStrip();
+            mainToolStrip = new ToolStrip();
             openToolStripButton = new ToolStripButton();
             toolStripSeparator1 = new ToolStripSeparator();
             saveToolStripButton = new ToolStripButton();
@@ -42,30 +42,30 @@
             deleteToolStripButton = new ToolStripButton();
             toolStripSeparator4 = new ToolStripSeparator();
             gridToolStripButton = new ToolStripButton();
-            statusStrip1 = new StatusStrip();
+            statusStrip = new StatusStrip();
             splitContainerOuter = new SplitContainer();
             treeViewGroups = new TreeView();
-            splitContainerInner = new SplitContainer();
-            propertyGrid1 = new PropertyGrid();
-            menuStrip1.SuspendLayout();
-            toolStrip1.SuspendLayout();
+            innerSplitContainer = new SplitContainer();
+            propertiesGrid = new PropertyGrid();
+            mainMenuStrip.SuspendLayout();
+            mainToolStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)splitContainerOuter).BeginInit();
             splitContainerOuter.Panel1.SuspendLayout();
             splitContainerOuter.Panel2.SuspendLayout();
             splitContainerOuter.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)splitContainerInner).BeginInit();
-            splitContainerInner.Panel2.SuspendLayout();
-            splitContainerInner.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)innerSplitContainer).BeginInit();
+            innerSplitContainer.Panel2.SuspendLayout();
+            innerSplitContainer.SuspendLayout();
             SuspendLayout();
             // 
-            // menuStrip1
+            // mainMenuStrip
             // 
-            menuStrip1.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem });
-            menuStrip1.Location = new Point(0, 0);
-            menuStrip1.Name = "menuStrip1";
-            menuStrip1.Size = new Size(800, 24);
-            menuStrip1.TabIndex = 0;
-            menuStrip1.Text = "menuStrip1";
+            mainMenuStrip.Items.AddRange(new ToolStripItem[] { fileToolStripMenuItem });
+            mainMenuStrip.Location = new Point(0, 0);
+            mainMenuStrip.Name = "mainMenuStrip";
+            mainMenuStrip.Size = new Size(800, 24);
+            mainMenuStrip.TabIndex = 0;
+            mainMenuStrip.Text = "menuStrip1";
             // 
             // fileToolStripMenuItem
             // 
@@ -81,14 +81,14 @@
             openToolStripMenuItem.Text = "Open...";
             openToolStripMenuItem.Click += openToolStripMenuItem_Click;
             // 
-            // toolStrip1
+            // mainToolStrip
             // 
-            toolStrip1.Items.AddRange(new ToolStripItem[] { openToolStripButton, toolStripSeparator1, saveToolStripButton, toolStripSeparator2, addGroupToolStripButton, toolStripSeparator3, deleteToolStripButton, toolStripSeparator4, gridToolStripButton });
-            toolStrip1.Location = new Point(0, 24);
-            toolStrip1.Name = "toolStrip1";
-            toolStrip1.Size = new Size(800, 25);
-            toolStrip1.TabIndex = 1;
-            toolStrip1.Text = "toolStrip1";
+            mainToolStrip.Items.AddRange(new ToolStripItem[] { openToolStripButton, toolStripSeparator1, saveToolStripButton, toolStripSeparator2, addGroupToolStripButton, toolStripSeparator3, deleteToolStripButton, toolStripSeparator4, gridToolStripButton });
+            mainToolStrip.Location = new Point(0, 24);
+            mainToolStrip.Name = "mainToolStrip";
+            mainToolStrip.Size = new Size(800, 25);
+            mainToolStrip.TabIndex = 1;
+            mainToolStrip.Text = "toolStrip1";
             // 
             // openToolStripButton
             // 
@@ -157,13 +157,13 @@
             gridToolStripButton.Size = new Size(33, 22);
             gridToolStripButton.Text = "Grid";
             // 
-            // statusStrip1
+            // statusStrip
             // 
-            statusStrip1.Location = new Point(0, 428);
-            statusStrip1.Name = "statusStrip1";
-            statusStrip1.Size = new Size(800, 22);
-            statusStrip1.TabIndex = 2;
-            statusStrip1.Text = "statusStrip1";
+            statusStrip.Location = new Point(0, 428);
+            statusStrip.Name = "statusStrip";
+            statusStrip.Size = new Size(800, 22);
+            statusStrip.TabIndex = 2;
+            statusStrip.Text = "statusStrip1";
             // 
             // splitContainerOuter
             // 
@@ -178,7 +178,7 @@
             // 
             // splitContainerOuter.Panel2
             // 
-            splitContainerOuter.Panel2.Controls.Add(splitContainerInner);
+            splitContainerOuter.Panel2.Controls.Add(innerSplitContainer);
             splitContainerOuter.Size = new Size(800, 379);
             splitContainerOuter.SplitterDistance = 250;
             splitContainerOuter.TabIndex = 3;
@@ -191,31 +191,31 @@
             treeViewGroups.Size = new Size(250, 379);
             treeViewGroups.TabIndex = 0;
             // 
-            // splitContainerInner
+            // innerSplitContainer
             // 
-            splitContainerInner.Dock = DockStyle.Fill;
-            splitContainerInner.FixedPanel = FixedPanel.Panel2;
-            splitContainerInner.Location = new Point(0, 0);
-            splitContainerInner.Name = "splitContainerInner";
+            innerSplitContainer.Dock = DockStyle.Fill;
+            innerSplitContainer.FixedPanel = FixedPanel.Panel2;
+            innerSplitContainer.Location = new Point(0, 0);
+            innerSplitContainer.Name = "innerSplitContainer";
             // 
-            // splitContainerInner.Panel1
+            // innerSplitContainer.Panel1
             // 
-            splitContainerInner.Panel1.BackColor = Color.DimGray;
+            innerSplitContainer.Panel1.BackColor = Color.DimGray;
             // 
-            // splitContainerInner.Panel2
+            // innerSplitContainer.Panel2
             // 
-            splitContainerInner.Panel2.Controls.Add(propertyGrid1);
-            splitContainerInner.Size = new Size(546, 379);
-            splitContainerInner.SplitterDistance = 300;
-            splitContainerInner.TabIndex = 0;
+            innerSplitContainer.Panel2.Controls.Add(propertiesGrid);
+            innerSplitContainer.Size = new Size(546, 379);
+            innerSplitContainer.SplitterDistance = 300;
+            innerSplitContainer.TabIndex = 0;
             // 
-            // propertyGrid1
+            // propertiesGrid
             // 
-            propertyGrid1.Dock = DockStyle.Fill;
-            propertyGrid1.Location = new Point(0, 0);
-            propertyGrid1.Name = "propertyGrid1";
-            propertyGrid1.Size = new Size(242, 379);
-            propertyGrid1.TabIndex = 0;
+            propertiesGrid.Dock = DockStyle.Fill;
+            propertiesGrid.Location = new Point(0, 0);
+            propertiesGrid.Name = "propertiesGrid";
+            propertiesGrid.Size = new Size(242, 379);
+            propertiesGrid.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -223,36 +223,36 @@
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(800, 450);
             Controls.Add(splitContainerOuter);
-            Controls.Add(statusStrip1);
-            Controls.Add(toolStrip1);
-            Controls.Add(menuStrip1);
-            MainMenuStrip = menuStrip1;
+            Controls.Add(statusStrip);
+            Controls.Add(mainToolStrip);
+            Controls.Add(mainMenuStrip);
+            MainMenuStrip = mainMenuStrip;
             Name = "MainForm";
             Text = "Form1";
-            menuStrip1.ResumeLayout(false);
-            menuStrip1.PerformLayout();
-            toolStrip1.ResumeLayout(false);
-            toolStrip1.PerformLayout();
+            mainMenuStrip.ResumeLayout(false);
+            mainMenuStrip.PerformLayout();
+            mainToolStrip.ResumeLayout(false);
+            mainToolStrip.PerformLayout();
             splitContainerOuter.Panel1.ResumeLayout(false);
             splitContainerOuter.Panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)splitContainerOuter).EndInit();
             splitContainerOuter.ResumeLayout(false);
-            splitContainerInner.Panel2.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)splitContainerInner).EndInit();
-            splitContainerInner.ResumeLayout(false);
+            innerSplitContainer.Panel2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)innerSplitContainer).EndInit();
+            innerSplitContainer.ResumeLayout(false);
             ResumeLayout(false);
             PerformLayout();
         }
 
         #endregion
 
-        private MenuStrip menuStrip1;
-        private ToolStrip toolStrip1;
-        private StatusStrip statusStrip1;
+        private MenuStrip mainMenuStrip;
+        private ToolStrip mainToolStrip;
+        private StatusStrip statusStrip;
         private SplitContainer splitContainerOuter;
         private TreeView treeViewGroups;
-        private SplitContainer splitContainerInner;
-        private PropertyGrid propertyGrid1;
+        private SplitContainer innerSplitContainer;
+        private PropertyGrid propertiesGrid;
         private ToolStripMenuItem fileToolStripMenuItem;
         private ToolStripMenuItem openToolStripMenuItem;
         private ToolStripButton openToolStripButton;

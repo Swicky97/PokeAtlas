@@ -1,5 +1,6 @@
 using PokeAtlas.Controls;
 using PokeAtlas.Models;
+using PokeAtlas.Services;
 
 namespace PokeAtlas;
 
@@ -7,7 +8,7 @@ public partial class MainForm : Form
 {
     private readonly TilesetCanvas _tilesetCanvas = new();
 
-    private readonly List<TileGroup> _groups = new();
+    private readonly GroupService _groupService = new();
 
     public MainForm()
     {
@@ -20,7 +21,7 @@ public partial class MainForm : Form
     {
         _tilesetCanvas.Dock = DockStyle.Fill;
 
-        splitContainerInner.Panel1.Controls.Add(_tilesetCanvas);
+        innerSplitContainer.Panel1.Controls.Add(_tilesetCanvas);
     }
 
     private void OpenTileset()
@@ -68,7 +69,7 @@ public partial class MainForm : Form
             TileBounds = selection.Value
         };
 
-        _groups.Add(group);
+        _groupService.Add(group);
 
         RefreshTreeView();
     }
@@ -79,7 +80,7 @@ public partial class MainForm : Form
 
         treeViewGroups.Nodes.Clear();
 
-        foreach (var category in _groups.GroupBy(g => g.Category))
+        foreach (var category in _groupService.Groups.GroupBy(g => g.Category))
         {
             TreeNode categoryNode = new(category.Key);
 
