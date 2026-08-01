@@ -176,13 +176,32 @@ public partial class MainForm : Form
         }
     }
 
+    private void searchToolStripTextBox_TextChanged(object sender, EventArgs e)
+    {
+        RefreshTreeView();
+    }
+
+    private static bool MatchesSearch(TileGroup group, string searchText)
+    {
+        return group.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase)
+            || group.Category.Contains(searchText, StringComparison.OrdinalIgnoreCase)
+            || group.Tags.Any(tag => tag.Contains(searchText, StringComparison.OrdinalIgnoreCase));
+    }
+
     private void RefreshTreeView()
     {
+        string searchText = searchToolStripTextBox.Text.Trim();
+
+        IEnumerable<TileGroup> groups = _groupService.Groups;
+
+        if (searchText.Length > 0)
+            groups = groups.Where(g => MatchesSearch(g, searchText));
+
         treeViewGroups.BeginUpdate();
 
         treeViewGroups.Nodes.Clear();
 
-        foreach (var category in _groupService.Groups.GroupBy(g => g.Category))
+        foreach (var category in groups.GroupBy(g => g.Category))
         {
             TreeNode categoryNode = new(category.Key);
 

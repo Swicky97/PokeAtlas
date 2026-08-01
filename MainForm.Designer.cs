@@ -42,6 +42,9 @@
             deleteToolStripButton = new ToolStripButton();
             toolStripSeparator4 = new ToolStripSeparator();
             gridToolStripButton = new ToolStripButton();
+            toolStripSeparator5 = new ToolStripSeparator();
+            searchToolStripLabel = new ToolStripLabel();
+            searchToolStripTextBox = new ToolStripTextBox();
             statusStrip = new StatusStrip();
             splitContainerOuter = new SplitContainer();
             treeViewGroups = new TreeView();
@@ -83,7 +86,7 @@
             // 
             // mainToolStrip
             // 
-            mainToolStrip.Items.AddRange(new ToolStripItem[] { openToolStripButton, toolStripSeparator1, saveToolStripButton, toolStripSeparator2, addGroupToolStripButton, toolStripSeparator3, deleteToolStripButton, toolStripSeparator4, gridToolStripButton });
+            mainToolStrip.Items.AddRange(new ToolStripItem[] { openToolStripButton, toolStripSeparator1, saveToolStripButton, toolStripSeparator2, addGroupToolStripButton, toolStripSeparator3, deleteToolStripButton, toolStripSeparator4, gridToolStripButton, toolStripSeparator5, searchToolStripLabel, searchToolStripTextBox });
             mainToolStrip.Location = new Point(0, 24);
             mainToolStrip.Name = "mainToolStrip";
             mainToolStrip.Size = new Size(800, 25);
@@ -158,7 +161,26 @@
             gridToolStripButton.Name = "gridToolStripButton";
             gridToolStripButton.Size = new Size(33, 22);
             gridToolStripButton.Text = "Grid";
-            // 
+            //
+            // toolStripSeparator5
+            //
+            toolStripSeparator5.Name = "toolStripSeparator5";
+            toolStripSeparator5.Size = new Size(6, 25);
+            //
+            // searchToolStripLabel
+            //
+            searchToolStripLabel.Name = "searchToolStripLabel";
+            searchToolStripLabel.Size = new Size(46, 22);
+            searchToolStripLabel.Text = "Search:";
+            //
+            // searchToolStripTextBox
+            //
+            searchToolStripTextBox.Name = "searchToolStripTextBox";
+            searchToolStripTextBox.Size = new Size(180, 25);
+            searchToolStripTextBox.ToolTipText = "Search groups by name, category, or tag";
+            searchToolStripTextBox.TextBox.PlaceholderText = "name, category, tag...";
+            searchToolStripTextBox.TextChanged += searchToolStripTextBox_TextChanged;
+            //
             // statusStrip
             // 
             statusStrip.Location = new Point(0, 428);
@@ -268,5 +290,8 @@
         private ToolStripButton deleteToolStripButton;
         private ToolStripSeparator toolStripSeparator4;
         private ToolStripButton gridToolStripButton;
+        private ToolStripSeparator toolStripSeparator5;
+        private ToolStripLabel searchToolStripLabel;
+        private ToolStripTextBox searchToolStripTextBox;
     }
 }
