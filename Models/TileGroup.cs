@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.ComponentModel.Design;
 using System.Drawing.Design;
+using System.Text.Json.Serialization;
 
 namespace PokeAtlas.Models;
 
@@ -16,6 +17,8 @@ public class TileGroup
     public string Category { get; set; } = "Uncategorized";
 
     [Category("Geometry")]
+    [JsonPropertyName("bounds")]
+    [JsonConverter(typeof(RectangleJsonConverter))]
     public Rectangle TileBounds { get; set; }
 
     [Category("Metadata")]

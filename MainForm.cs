@@ -10,6 +10,8 @@ public partial class MainForm : Form
 
     private readonly GroupService _groupService = new();
 
+    private readonly MetadataService _metadataService = new();
+
     public MainForm()
     {
         InitializeComponent();
@@ -34,6 +36,62 @@ public partial class MainForm : Form
         if (dialog.ShowDialog() == DialogResult.OK)
         {
             _tilesetCanvas.LoadTileset(dialog.FileName);
+
+            LoadMetadataIfPresent();
+        }
+    }
+
+    private string? GetMetadataPath()
+    {
+        if (_tilesetCanvas.TilesetPath is not { } tilesetPath)
+            return null;
+
+        string? directory = Path.GetDirectoryName(tilesetPath);
+
+        return directory is null ? null : Path.Combine(directory, "metadata.json");
+    }
+
+    private void LoadMetadataIfPresent()
+    {
+        string? metadataPath = GetMetadataPath();
+
+        if (metadataPath is null || !File.Exists(metadataPath))
+            return;
+
+        try
+        {
+            List<TileGroup> groups = _metadataService.Load(metadataPath);
+
+            _groupService.Clear();
+
+            foreach (TileGroup group in groups)
+                _groupService.Add(group);
+
+            RefreshTreeView();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Failed to load metadata.json:\n{ex.Message}", "Load Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private void saveToolStripButton_Click(object sender, EventArgs e)
+    {
+        string? metadataPath = GetMetadataPath();
+
+        if (metadataPath is null)
+        {
+            MessageBox.Show("Please open a tileset first.");
+            return;
+        }
+
+        try
+        {
+            _metadataService.Save(metadataPath, _groupService.Groups);
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show($"Failed to save metadata.json:\n{ex.Message}", "Save Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 

@@ -113,7 +113,8 @@
             saveToolStripButton.Name = "saveToolStripButton";
             saveToolStripButton.Size = new Size(35, 22);
             saveToolStripButton.Text = "Save";
-            // 
+            saveToolStripButton.Click += saveToolStripButton_Click;
+            //
             // toolStripSeparator2
             // 
             toolStripSeparator2.Name = "toolStripSeparator2";

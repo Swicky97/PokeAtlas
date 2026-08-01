@@ -22,4 +22,9 @@ public class GroupService
     {
         _groups.Remove(group);
     }
+
+    public void Clear()
+    {
+        _groups.Clear();
+    }
 }
