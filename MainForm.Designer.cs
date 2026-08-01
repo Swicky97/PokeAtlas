@@ -44,7 +44,7 @@
             gridToolStripButton = new ToolStripButton();
             statusStrip1 = new StatusStrip();
             splitContainerOuter = new SplitContainer();
-            treeView1 = new TreeView();
+            treeViewGroups = new TreeView();
             splitContainerInner = new SplitContainer();
             propertyGrid1 = new PropertyGrid();
             menuStrip1.SuspendLayout();
@@ -174,7 +174,7 @@
             // 
             // splitContainerOuter.Panel1
             // 
-            splitContainerOuter.Panel1.Controls.Add(treeView1);
+            splitContainerOuter.Panel1.Controls.Add(treeViewGroups);
             // 
             // splitContainerOuter.Panel2
             // 
@@ -183,13 +183,13 @@
             splitContainerOuter.SplitterDistance = 250;
             splitContainerOuter.TabIndex = 3;
             // 
-            // treeView1
+            // treeViewGroups
             // 
-            treeView1.Dock = DockStyle.Fill;
-            treeView1.Location = new Point(0, 0);
-            treeView1.Name = "treeView1";
-            treeView1.Size = new Size(250, 379);
-            treeView1.TabIndex = 0;
+            treeViewGroups.Dock = DockStyle.Fill;
+            treeViewGroups.Location = new Point(0, 0);
+            treeViewGroups.Name = "treeViewGroups";
+            treeViewGroups.Size = new Size(250, 379);
+            treeViewGroups.TabIndex = 0;
             // 
             // splitContainerInner
             // 
@@ -250,7 +250,7 @@
         private ToolStrip toolStrip1;
         private StatusStrip statusStrip1;
         private SplitContainer splitContainerOuter;
-        private TreeView treeView1;
+        private TreeView treeViewGroups;
         private SplitContainer splitContainerInner;
         private PropertyGrid propertyGrid1;
         private ToolStripMenuItem fileToolStripMenuItem;
