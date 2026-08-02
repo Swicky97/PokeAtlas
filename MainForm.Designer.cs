@@ -46,6 +46,8 @@
             buildToolStripButton = new ToolStripButton();
             toolStripSeparator7 = new ToolStripSeparator();
             duplicatesToolStripButton = new ToolStripButton();
+            toolStripSeparator8 = new ToolStripSeparator();
+            browserToolStripButton = new ToolStripButton();
             toolStripSeparator5 = new ToolStripSeparator();
             searchToolStripLabel = new ToolStripLabel();
             searchToolStripTextBox = new ToolStripTextBox();
@@ -90,7 +92,7 @@
             // 
             // mainToolStrip
             // 
-            mainToolStrip.Items.AddRange(new ToolStripItem[] { openToolStripButton, toolStripSeparator1, saveToolStripButton, toolStripSeparator2, addGroupToolStripButton, toolStripSeparator3, deleteToolStripButton, toolStripSeparator4, gridToolStripButton, toolStripSeparator6, buildToolStripButton, toolStripSeparator7, duplicatesToolStripButton, toolStripSeparator5, searchToolStripLabel, searchToolStripTextBox });
+            mainToolStrip.Items.AddRange(new ToolStripItem[] { openToolStripButton, toolStripSeparator1, saveToolStripButton, toolStripSeparator2, addGroupToolStripButton, toolStripSeparator3, deleteToolStripButton, toolStripSeparator4, gridToolStripButton, toolStripSeparator6, buildToolStripButton, toolStripSeparator7, duplicatesToolStripButton, toolStripSeparator8, browserToolStripButton, toolStripSeparator5, searchToolStripLabel, searchToolStripTextBox });
             mainToolStrip.Location = new Point(0, 24);
             mainToolStrip.Name = "mainToolStrip";
             mainToolStrip.Size = new Size(800, 25);
@@ -191,6 +193,19 @@
             duplicatesToolStripButton.Size = new Size(75, 22);
             duplicatesToolStripButton.Text = "Duplicates";
             duplicatesToolStripButton.Click += duplicatesToolStripButton_Click;
+            //
+            // toolStripSeparator8
+            //
+            toolStripSeparator8.Name = "toolStripSeparator8";
+            toolStripSeparator8.Size = new Size(6, 25);
+            //
+            // browserToolStripButton
+            //
+            browserToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            browserToolStripButton.Name = "browserToolStripButton";
+            browserToolStripButton.Size = new Size(55, 22);
+            browserToolStripButton.Text = "Browser";
+            browserToolStripButton.Click += browserToolStripButton_Click;
             //
             // toolStripSeparator5
             //
@@ -324,6 +339,8 @@
         private ToolStripButton buildToolStripButton;
         private ToolStripSeparator toolStripSeparator7;
         private ToolStripButton duplicatesToolStripButton;
+        private ToolStripSeparator toolStripSeparator8;
+        private ToolStripButton browserToolStripButton;
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripLabel searchToolStripLabel;
         private ToolStripTextBox searchToolStripTextBox;

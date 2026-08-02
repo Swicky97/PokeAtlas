@@ -20,6 +20,8 @@ public partial class MainForm : Form
 
     private AtlasPreviewForm? _atlasPreviewForm;
 
+    private TileBrowserForm? _tileBrowserForm;
+
     public MainForm()
     {
         InitializeComponent();
@@ -159,6 +161,22 @@ public partial class MainForm : Form
         _duplicatesForm.Show(this);
     }
 
+    private void browserToolStripButton_Click(object sender, EventArgs e)
+    {
+        if (_tileBrowserForm is { IsDisposed: false })
+        {
+            _tileBrowserForm.Activate();
+            return;
+        }
+
+        _tileBrowserForm = new TileBrowserForm(TilesetCanvas.TileSize);
+        _tileBrowserForm.FormClosed += (_, _) => _tileBrowserForm = null;
+        _tileBrowserForm.GroupSelected += group => SelectNodeForGroup(group);
+        _tileBrowserForm.SetSource(_tilesetCanvas.Tileset, _groupService.Groups);
+
+        _tileBrowserForm.Show(this);
+    }
+
     private void openToolStripMenuItem_Click(object sender, EventArgs e)
     {
         OpenTileset();
@@ -285,6 +303,8 @@ public partial class MainForm : Form
         treeViewGroups.ExpandAll();
 
         treeViewGroups.EndUpdate();
+
+        _tileBrowserForm?.SetSource(_tilesetCanvas.Tileset, _groupService.Groups);
     }
 
     private void treeViewGroups_AfterSelect(object sender, TreeViewEventArgs e)
