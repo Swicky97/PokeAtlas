@@ -16,11 +16,21 @@ public partial class MainForm : Form
 
     private readonly DuplicateDetectionService _duplicateDetectionService = new();
 
+    private readonly AutoDetectionService _autoDetectionService = new();
+
+    private readonly TileDatabaseService _tileDatabaseService = new();
+
+    private readonly SimilarityService _similarityService = new();
+
     private DuplicatesForm? _duplicatesForm;
+
+    private DuplicatesForm? _similarTilesForm;
 
     private AtlasPreviewForm? _atlasPreviewForm;
 
     private TileBrowserForm? _tileBrowserForm;
+
+    private AutoDetectForm? _autoDetectForm;
 
     public MainForm()
     {
@@ -177,6 +187,84 @@ public partial class MainForm : Form
         _tileBrowserForm.Show(this);
     }
 
+    private void autoDetectToolStripButton_Click(object sender, EventArgs e)
+    {
+        if (_tilesetCanvas.Tileset is not { } tileset)
+        {
+            MessageBox.Show("Please open a tileset first.");
+            return;
+        }
+
+        if (_autoDetectForm is { IsDisposed: false })
+        {
+            _autoDetectForm.Activate();
+            return;
+        }
+
+        Cursor = Cursors.WaitCursor;
+        List<DetectedRegion> regions;
+
+        try
+        {
+            regions = _autoDetectionService.DetectRegions(tileset, TilesetCanvas.TileSize, _groupService.Groups);
+        }
+        finally
+        {
+            Cursor = Cursors.Default;
+        }
+
+        _autoDetectForm = new AutoDetectForm(tileset, regions, TilesetCanvas.TileSize);
+        _autoDetectForm.FormClosed += (_, _) => _autoDetectForm = null;
+        _autoDetectForm.RegionAccepted += bounds =>
+        {
+            if (CreateGroupFromDialog(bounds) is not null)
+                _autoDetectForm?.RemoveRegion(bounds);
+        };
+
+        _autoDetectForm.Show(this);
+    }
+
+    private void similarToolStripButton_Click(object sender, EventArgs e)
+    {
+        if (_tilesetCanvas.Tileset is not { } tileset)
+        {
+            MessageBox.Show("Please open a tileset first.");
+            return;
+        }
+
+        if (_similarTilesForm is { IsDisposed: false })
+        {
+            _similarTilesForm.Activate();
+            return;
+        }
+
+        Cursor = Cursors.WaitCursor;
+        List<DuplicateTileGroup> similarGroups;
+
+        try
+        {
+            List<Tile> tiles = _tileDatabaseService.BuildDatabase(tileset, TilesetCanvas.TileSize);
+
+            similarGroups = _similarityService
+                .FindSimilarGroups(tiles)
+                .Select(cluster => new DuplicateTileGroup
+                {
+                    TileSize = TilesetCanvas.TileSize,
+                    Positions = cluster.Select(t => t.Position).ToList()
+                })
+                .ToList();
+        }
+        finally
+        {
+            Cursor = Cursors.Default;
+        }
+
+        _similarTilesForm = new DuplicatesForm(tileset, similarGroups, TilesetCanvas.TileSize, "Similar Tiles", "similar");
+        _similarTilesForm.TileSelected += bounds => _tilesetCanvas.CenterOnBounds(bounds);
+
+        _similarTilesForm.Show(this);
+    }
+
     private void openToolStripMenuItem_Click(object sender, EventArgs e)
     {
         OpenTileset();
@@ -197,25 +285,31 @@ public partial class MainForm : Form
             return;
         }
 
+        if (CreateGroupFromDialog(selection.Value) is not null)
+            _tilesetCanvas.ClearSelection();
+    }
+
+    private TileGroup? CreateGroupFromDialog(Rectangle tileBounds)
+    {
         using AddGroupForm dialog = new();
 
-        if (dialog.ShowDialog() != DialogResult.OK)
-            return;
+        if (dialog.ShowDialog(this) != DialogResult.OK)
+            return null;
 
         TileGroup group = new()
         {
             Name = dialog.GroupName,
             Category = dialog.Category,
-            TileBounds = selection.Value,
+            TileBounds = tileBounds,
             SourceAtlas = _tilesetCanvas.TilesetPath is { } path ? Path.GetFileName(path) : string.Empty
         };
 
         _groupService.Add(group);
 
-        _tilesetCanvas.ClearSelection();
-
         RefreshTreeView();
         SelectNodeForGroup(group);
+
+        return group;
     }
 
     private void deleteToolStripButton_Click(object sender, EventArgs e)
@@ -263,13 +357,6 @@ public partial class MainForm : Form
         RefreshTreeView();
     }
 
-    private static bool MatchesSearch(TileGroup group, string searchText)
-    {
-        return group.Name.Contains(searchText, StringComparison.OrdinalIgnoreCase)
-            || group.Category.Contains(searchText, StringComparison.OrdinalIgnoreCase)
-            || group.Tags.Any(tag => tag.Contains(searchText, StringComparison.OrdinalIgnoreCase));
-    }
-
     private void RefreshTreeView()
     {
         string searchText = searchToolStripTextBox.Text.Trim();
@@ -277,7 +364,7 @@ public partial class MainForm : Form
         IEnumerable<TileGroup> groups = _groupService.Groups;
 
         if (searchText.Length > 0)
-            groups = groups.Where(g => MatchesSearch(g, searchText));
+            groups = groups.Where(g => TileGroupSearch.Matches(g, searchText));
 
         treeViewGroups.BeginUpdate();
 
