@@ -22,9 +22,13 @@ public partial class MainForm : Form
 
     private readonly SimilarityService _similarityService = new();
 
+    private readonly ClusteringService _clusteringService = new();
+
     private DuplicatesForm? _duplicatesForm;
 
     private DuplicatesForm? _similarTilesForm;
+
+    private DuplicatesForm? _clusterForm;
 
     private AtlasPreviewForm? _atlasPreviewForm;
 
@@ -263,6 +267,47 @@ public partial class MainForm : Form
         _similarTilesForm.TileSelected += bounds => _tilesetCanvas.CenterOnBounds(bounds);
 
         _similarTilesForm.Show(this);
+    }
+
+    private void clusterToolStripButton_Click(object sender, EventArgs e)
+    {
+        if (_tilesetCanvas.Tileset is not { } tileset)
+        {
+            MessageBox.Show("Please open a tileset first.");
+            return;
+        }
+
+        if (_clusterForm is { IsDisposed: false })
+        {
+            _clusterForm.Activate();
+            return;
+        }
+
+        Cursor = Cursors.WaitCursor;
+        List<DuplicateTileGroup> clusters;
+
+        try
+        {
+            List<Tile> tiles = _tileDatabaseService.BuildDatabase(tileset, TilesetCanvas.TileSize);
+
+            clusters = _clusteringService
+                .ClusterTiles(tiles)
+                .Select(cluster => new DuplicateTileGroup
+                {
+                    TileSize = TilesetCanvas.TileSize,
+                    Positions = cluster.Select(t => t.Position).ToList()
+                })
+                .ToList();
+        }
+        finally
+        {
+            Cursor = Cursors.Default;
+        }
+
+        _clusterForm = new DuplicatesForm(tileset, clusters, TilesetCanvas.TileSize, "Tile Clusters", "cluster");
+        _clusterForm.TileSelected += bounds => _tilesetCanvas.CenterOnBounds(bounds);
+
+        _clusterForm.Show(this);
     }
 
     private void openToolStripMenuItem_Click(object sender, EventArgs e)

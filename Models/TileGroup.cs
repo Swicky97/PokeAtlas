@@ -5,6 +5,7 @@ using System.Text.Json.Serialization;
 
 namespace PokeAtlas.Models;
 
+[JsonConverter(typeof(TileGroupJsonConverter))]
 public class TileGroup
 {
     [Browsable(false)]
@@ -16,10 +17,17 @@ public class TileGroup
     [Category("General")]
     public string Category { get; set; } = "Uncategorized";
 
+    // Tile-grid coordinates in the source tileset. Usually one contiguous rectangle (manual
+    // selection, auto-detected region), but detection review (duplicates/similar/clusters) can
+    // accept a scattered set of same-tile positions into a single group, hence a list rather
+    // than one Rectangle.
     [Category("Geometry")]
-    [JsonPropertyName("bounds")]
-    [JsonConverter(typeof(RectangleJsonConverter))]
-    public Rectangle TileBounds { get; set; }
+    public List<Rectangle> Regions { get; set; } = new();
+
+    [Browsable(false)]
+    public Rectangle BoundingBox => Regions.Count == 0
+        ? Rectangle.Empty
+        : Regions.Skip(1).Aggregate(Regions[0], Rectangle.Union);
 
     [Category("Metadata")]
     public List<string> Tags { get; set; } = new();

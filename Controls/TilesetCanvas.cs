@@ -320,22 +320,23 @@ public class TilesetCanvas : ScrollableControl
         if (_selectedGroup == null)
             return;
 
-        Rectangle r = _selectedGroup.TileBounds;
-
-        Rectangle pixels = new(
-            r.X * TileSize,
-            r.Y * TileSize,
-            r.Width * TileSize,
-            r.Height * TileSize);
-
         using Pen pen = new(Color.Lime, 0);
 
-        g.DrawRectangle(pen, pixels);
+        foreach (Rectangle r in _selectedGroup.Regions)
+        {
+            Rectangle pixels = new(
+                r.X * TileSize,
+                r.Y * TileSize,
+                r.Width * TileSize,
+                r.Height * TileSize);
+
+            g.DrawRectangle(pen, pixels);
+        }
     }
 
     public void CenterOnGroup(TileGroup group)
     {
-        CenterOnBounds(group.TileBounds);
+        CenterOnBounds(group.BoundingBox);
     }
 
     public void CenterOnBounds(Rectangle tileBounds)

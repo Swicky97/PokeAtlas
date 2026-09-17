@@ -56,11 +56,13 @@ public partial class TileBrowserForm : Form
         {
             foreach (TileGroup group in groups)
             {
+                Rectangle representative = group.Regions.Count > 0 ? group.Regions[0] : Rectangle.Empty;
+
                 Rectangle sourceRect = new(
-                    group.TileBounds.X * _tileSize,
-                    group.TileBounds.Y * _tileSize,
-                    group.TileBounds.Width * _tileSize,
-                    group.TileBounds.Height * _tileSize);
+                    representative.X * _tileSize,
+                    representative.Y * _tileSize,
+                    representative.Width * _tileSize,
+                    representative.Height * _tileSize);
 
                 _imageList.Images.Add(TileThumbnail.Create(tileset, sourceRect));
 

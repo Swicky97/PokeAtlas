@@ -52,6 +52,8 @@
             autoDetectToolStripButton = new ToolStripButton();
             toolStripSeparator10 = new ToolStripSeparator();
             similarToolStripButton = new ToolStripButton();
+            toolStripSeparator11 = new ToolStripSeparator();
+            clusterToolStripButton = new ToolStripButton();
             toolStripSeparator5 = new ToolStripSeparator();
             searchToolStripLabel = new ToolStripLabel();
             searchToolStripTextBox = new ToolStripTextBox();
@@ -96,7 +98,7 @@
             // 
             // mainToolStrip
             // 
-            mainToolStrip.Items.AddRange(new ToolStripItem[] { openToolStripButton, toolStripSeparator1, saveToolStripButton, toolStripSeparator2, addGroupToolStripButton, toolStripSeparator3, deleteToolStripButton, toolStripSeparator4, gridToolStripButton, toolStripSeparator6, buildToolStripButton, toolStripSeparator7, duplicatesToolStripButton, toolStripSeparator8, browserToolStripButton, toolStripSeparator9, autoDetectToolStripButton, toolStripSeparator10, similarToolStripButton, toolStripSeparator5, searchToolStripLabel, searchToolStripTextBox });
+            mainToolStrip.Items.AddRange(new ToolStripItem[] { openToolStripButton, toolStripSeparator1, saveToolStripButton, toolStripSeparator2, addGroupToolStripButton, toolStripSeparator3, deleteToolStripButton, toolStripSeparator4, gridToolStripButton, toolStripSeparator6, buildToolStripButton, toolStripSeparator7, duplicatesToolStripButton, toolStripSeparator8, browserToolStripButton, toolStripSeparator9, autoDetectToolStripButton, toolStripSeparator10, similarToolStripButton, toolStripSeparator11, clusterToolStripButton, toolStripSeparator5, searchToolStripLabel, searchToolStripTextBox });
             mainToolStrip.Location = new Point(0, 24);
             mainToolStrip.Name = "mainToolStrip";
             mainToolStrip.Size = new Size(800, 25);
@@ -237,6 +239,19 @@
             similarToolStripButton.Text = "Similar";
             similarToolStripButton.Click += similarToolStripButton_Click;
             //
+            // toolStripSeparator11
+            //
+            toolStripSeparator11.Name = "toolStripSeparator11";
+            toolStripSeparator11.Size = new Size(6, 25);
+            //
+            // clusterToolStripButton
+            //
+            clusterToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Text;
+            clusterToolStripButton.Name = "clusterToolStripButton";
+            clusterToolStripButton.Size = new Size(50, 22);
+            clusterToolStripButton.Text = "Cluster";
+            clusterToolStripButton.Click += clusterToolStripButton_Click;
+            //
             // toolStripSeparator5
             //
             toolStripSeparator5.Name = "toolStripSeparator5";
@@ -375,6 +390,8 @@
         private ToolStripButton autoDetectToolStripButton;
         private ToolStripSeparator toolStripSeparator10;
         private ToolStripButton similarToolStripButton;
+        private ToolStripSeparator toolStripSeparator11;
+        private ToolStripButton clusterToolStripButton;
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripLabel searchToolStripLabel;
         private ToolStripTextBox searchToolStripTextBox;
